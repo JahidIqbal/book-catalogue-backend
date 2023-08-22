@@ -90,7 +90,6 @@ const run = async () => {
       }
     });
 
-    // Delete a book by ID
     app.delete("/books/:id", async (req, res) => {
       try {
         const id = req.params.id;
@@ -115,7 +114,6 @@ const run = async () => {
   }
 };
 
-// Start the server
 run().catch((err) => console.log(err));
 
 // Default route
