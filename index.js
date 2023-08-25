@@ -49,12 +49,34 @@ const run = async () => {
       res.send(result);
     });
 
+    // Update a book's details
+    app.put("/books/:id", async (req, res) => {
+      try {
+        const id = req.params.id;
+        const updatedBook = req.body;
+
+        const result = await bookCollection.updateOne(
+          { _id: new ObjectId(id) },
+          { $set: updatedBook }
+        );
+
+        if (result.modifiedCount === 0) {
+          return res.status(404).json({ message: "Book not found" });
+        }
+
+        res.status(204).send();
+      } catch (error) {
+        console.error("Error updating book:", error);
+        res.status(500).json({ message: "Error updating book", error });
+      }
+    });
+
     // Add a review to a book
     app.post("/books/:id/reviews", async (req, res) => {
       try {
         const bookId = req.params.id;
         const review = req.body.review;
-        
+
         const result = await bookCollection.updateOne(
           { _id: new ObjectId(bookId) },
           { $push: { reviews: review } }
@@ -90,6 +112,7 @@ const run = async () => {
       }
     });
 
+    // Delete a book
     app.delete("/books/:id", async (req, res) => {
       try {
         const id = req.params.id;
